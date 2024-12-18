@@ -1,81 +1,79 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import Signup from './Components/Signup';
+import Login from './Components/Login';
+import Dashboard from './Components/Dashboard';
 
-const Login = () => {
-  const navigate = useNavigate();
-  const [formdata, setformdata] = useState({
-    email: "",
-    password: ""
-  });
-
-  const handleChange = (e) => {
-    setformdata({ ...formdata, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/auth/login', formdata);
-      alert("Login successful!");
-      sessionStorage.setItem('token', response.data.token);
-      sessionStorage.setItem('user', JSON.stringify(response.data.user));
-      navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
-      alert(`Error: ${err.response?.data?.message || err.message}`);
-    }
-  };
+{/*const App = () => {
+  const token = sessionStorage.getItem('token');
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f4f4f9' }}>
-      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', width: '100%', maxWidth: '400px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Email</label>
-            <input
-              type="email"
-              name="email"
-              style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', color: '#333' }}
-              placeholder="Enter your email"
-              value={formdata.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Password</label>
-            <input
-              type="password"
-              name="password"
-              style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '16px', color: '#333' }}
-              placeholder="Enter your password"
-              value={formdata.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            style={{
-              width: '100%',
-              padding: '10px',
-              backgroundColor: '#007bff',
-              color: 'white',
-              fontSize: '16px',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              transition: 'background-color 0.3s',
-            }}
-          >
-            Login
-          </button>
-        </form>
-      </div>
-    </div>
+    <Router>
+      <nav>
+        <ul>
+          <li>
+        <Link to="/auth/signup">Signup</Link>
+        </li>
+        <li>
+        <Link to="/auth/login">Login</Link>
+        </li>
+        <li>
+        <Link to="/">User Auth App</Link>
+        </li>
+        {token && <Link to="/dashboard">Dashboard</Link>}
+        </ul>
+      </nav>
+
+      <Routes>
+        <Route path="/auth/signup" element={<Signup />} />
+        <Route path="/auth/login" element={<Login />} />
+        <Route path="/dashboard" element={token ? <Dashboard /> : <Navigate to="/auth/login"/>} />
+        <Route path="*" element={<h1>Page Not Found</h1>} />
+      </Routes>
+    </Router>
   );
 };
 
-export default Login;
+export default App;*/}
+
+
+const App = () => {
+  const token = sessionStorage.getItem('token');
+
+  return (
+    <Router>
+      <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f4f4f9', padding: '20px' }}>
+        <nav style={{ marginBottom: '20px', borderBottom: '2px solid #ddd', paddingBottom: '10px' }}>
+          <ul style={{ listStyleType: 'none', padding: '0' }}>
+            <li style={{ display: 'inline', marginRight: '15px' }}>
+              <Link to="/auth/signup" style={{ textDecoration: 'none', color: '#007bff', fontSize: '18px' }}>Signup</Link>
+            </li>
+            <li style={{ display: 'inline', marginRight: '15px' }}>
+              <Link to="/auth/login" style={{ textDecoration: 'none', color: '#007bff', fontSize: '18px' }}>Login</Link>
+            </li>
+            <li style={{ display: 'inline', marginRight: '15px' }}>
+              <Link to="/" style={{ textDecoration: 'none', color: '#007bff', fontSize: '18px' }}>User Auth App</Link>
+            </li>
+            {token && (
+              <li style={{ display: 'inline', marginRight: '15px' }}>
+                <Link to="/dashboard" style={{ textDecoration: 'none', color: '#007bff', fontSize: '18px' }}>Dashboard</Link>
+              </li>
+            )}
+          </ul>
+        </nav>
+
+        <Routes>
+          <Route path="/auth/signup" element={<Signup />} />
+          <Route path="/auth/login" element={<Login />} />
+          <Route
+            path="/dashboard"
+            element={token ? <Dashboard /> : <Navigate to="/auth/login" />}
+          />
+          <Route path="*" element={<h1>Page Not Found</h1>} />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
+
+export default App;
